@@ -1,69 +1,73 @@
-import java.util.*;
+import java.util.Arrays;
+import java.util.Scanner;
 
-// Custom Runtime Exception
-class CargoSafetyException extends RuntimeException {
-    public CargoSafetyException(String message) {
-        super(message);
-    }
-}
+public class TrainConsistManagementApp {
 
-// Goods Bogie class
-class GoodsBogie {
-    String type;
-    String cargo;
+    // Binary Search with Defensive Check
+    public static boolean binarySearch(String[] bogieIds, String searchKey) {
 
-    public GoodsBogie(String type) {
-        this.type = type;
-    }
-
-    public void assignCargo(String cargo) {
-        try {
-            // Safety rule
-            if (type.equals("Rectangular") && cargo.equals("Petroleum")) {
-                throw new CargoSafetyException(
-                        "Unsafe Assignment: Rectangular bogie cannot carry Petroleum!"
-                );
-            }
-
-            // Assign cargo if safe
-            this.cargo = cargo;
-            System.out.println("Cargo assigned successfully: " + cargo);
-
-        } catch (CargoSafetyException e) {
-            System.out.println("Error: " + e.getMessage());
-
-        } finally {
-            System.out.println("Assignment attempt completed.\n");
+        // ✅ Defensive Programming: Check empty state
+        if (bogieIds == null || bogieIds.length == 0) {
+            throw new IllegalStateException("Cannot perform search: No bogies available in the train consist.");
         }
-    }
 
-    public String getDetails() {
-        return "Type: " + type + ", Cargo: " + cargo;
-    }
-}
+        int low = 0;
+        int high = bogieIds.length - 1;
 
-public class Trainmanagementapp {
+        while (low <= high) {
+            int mid = (low + high) / 2;
+
+            int comparison = bogieIds[mid].compareTo(searchKey);
+
+            if (comparison == 0) {
+                return true;
+            } else if (comparison < 0) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+
+        return false;
+    }
 
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
 
-        System.out.println("=== Train Consist Management App ===");
+        System.out.print("Enter number of bogies: ");
+        int n = scanner.nextInt();
+        scanner.nextLine(); // consume newline
 
-        // Create bogies
-        GoodsBogie b1 = new GoodsBogie("Cylindrical");
-        GoodsBogie b2 = new GoodsBogie("Rectangular");
+        String[] bogieIds = new String[n];
 
-        // Safe assignment
-        b1.assignCargo("Petroleum");
+        // Input bogie IDs
+        if (n > 0) {
+            System.out.println("Enter bogie IDs:");
+            for (int i = 0; i < n; i++) {
+                bogieIds[i] = scanner.nextLine();
+            }
+        }
 
-        // Unsafe assignment (handled)
-        b2.assignCargo("Petroleum");
+        // Sort before binary search
+        Arrays.sort(bogieIds);
 
-        // Program continues
-        b2.assignCargo("Coal");
+        System.out.print("Enter bogie ID to search: ");
+        String searchKey = scanner.nextLine();
 
-        // Display final state
-        System.out.println("\nFinal Bogie States:");
-        System.out.println(b1.getDetails());
-        System.out.println(b2.getDetails());
+        try {
+            boolean found = binarySearch(bogieIds, searchKey);
+
+            if (found) {
+                System.out.println("Bogie ID found.");
+            } else {
+                System.out.println("Bogie ID not found.");
+            }
+
+        } catch (IllegalStateException e) {
+            // ✅ Meaningful error message to user
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        scanner.close();
     }
 }
