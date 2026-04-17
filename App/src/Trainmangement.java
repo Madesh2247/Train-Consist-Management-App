@@ -1,69 +1,29 @@
-import java.util.*;
+import java.util.Arrays;
+import java.util.Scanner;
 
-// Custom Runtime Exception
-class CargoSafetyException extends RuntimeException {
-    public CargoSafetyException(String message) {
-        super(message);
-    }
-}
-
-// Goods Bogie class
-class GoodsBogie {
-    String type;
-    String cargo;
-
-    public GoodsBogie(String type) {
-        this.type = type;
-    }
-
-    public void assignCargo(String cargo) {
-        try {
-            // Safety rule
-            if (type.equals("Rectangular") && cargo.equals("Petroleum")) {
-                throw new CargoSafetyException(
-                        "Unsafe Assignment: Rectangular bogie cannot carry Petroleum!"
-                );
-            }
-
-            // Assign cargo if safe
-            this.cargo = cargo;
-            System.out.println("Cargo assigned successfully: " + cargo);
-
-        } catch (CargoSafetyException e) {
-            System.out.println("Error: " + e.getMessage());
-
-        } finally {
-            System.out.println("Assignment attempt completed.\n");
-        }
-    }
-
-    public String getDetails() {
-        return "Type: " + type + ", Cargo: " + cargo;
-    }
-}
-
-public class Trainmanagementapp {
+public class TrainConsistManagementApp {
 
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
 
-        System.out.println("=== Train Consist Management App ===");
+        System.out.print("Enter number of bogie types: ");
+        int n = scanner.nextInt();
+        scanner.nextLine(); // consume newline
 
-        // Create bogies
-        GoodsBogie b1 = new GoodsBogie("Cylindrical");
-        GoodsBogie b2 = new GoodsBogie("Rectangular");
+        String[] bogieNames = new String[n];
 
-        // Safe assignment
-        b1.assignCargo("Petroleum");
+        System.out.println("Enter bogie type names:");
+        for (int i = 0; i < n; i++) {
+            bogieNames[i] = scanner.nextLine();
+        }
 
-        // Unsafe assignment (handled)
-        b2.assignCargo("Petroleum");
+        // Sorting using built-in method
+        Arrays.sort(bogieNames);
 
-        // Program continues
-        b2.assignCargo("Coal");
+        // Display sorted result
+        System.out.println("Sorted Bogie Names (Alphabetical):");
+        System.out.println(Arrays.toString(bogieNames));
 
-        // Display final state
-        System.out.println("\nFinal Bogie States:");
-        System.out.println(b1.getDetails());
-        System.out.println(b2.getDetails());
+        scanner.close();
     }
 }
