@@ -1,69 +1,65 @@
-import java.util.*;
-
-// Custom Runtime Exception
-class CargoSafetyException extends RuntimeException {
-    public CargoSafetyException(String message) {
-        super(message);
-    }
-}
-
-// Goods Bogie class
-class GoodsBogie {
-    String type;
-    String cargo;
-
-    public GoodsBogie(String type) {
-        this.type = type;
-    }
-
-    public void assignCargo(String cargo) {
-        try {
-            // Safety rule
-            if (type.equals("Rectangular") && cargo.equals("Petroleum")) {
-                throw new CargoSafetyException(
-                        "Unsafe Assignment: Rectangular bogie cannot carry Petroleum!"
-                );
-            }
-
-            // Assign cargo if safe
-            this.cargo = cargo;
-            System.out.println("Cargo assigned successfully: " + cargo);
-
-        } catch (CargoSafetyException e) {
-            System.out.println("Error: " + e.getMessage());
-
-        } finally {
-            System.out.println("Assignment attempt completed.\n");
-        }
-    }
-
-    public String getDetails() {
-        return "Type: " + type + ", Cargo: " + cargo;
-    }
-}
+import java.util.Scanner;
 
 public class Trainmanagementapp {
 
+    // Method to perform Bubble Sort
+    public static void bubbleSort(int[] capacities) {
+        int n = capacities.length;
+        boolean swapped;
+
+        // Outer loop for passes
+        for (int i = 0; i < n - 1; i++) {
+            swapped = false;
+
+            // Inner loop for comparison
+            for (int j = 0; j < n - i - 1; j++) {
+                if (capacities[j] > capacities[j + 1]) {
+                    // Swap logic
+                    int temp = capacities[j];
+                    capacities[j] = capacities[j + 1];
+                    capacities[j + 1] = temp;
+
+                    swapped = true;
+                }
+            }
+
+            // Optimization: stop if no swaps (already sorted)
+            if (!swapped) {
+                break;
+            }
+        }
+    }
+
+    // Method to display array
+    public static void display(int[] capacities) {
+        for (int cap : capacities) {
+            System.out.print(cap + " ");
+        }
+        System.out.println();
+    }
+
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
 
-        System.out.println("=== Train Consist Management App ===");
+        System.out.print("Enter number of passenger bogies: ");
+        int n = scanner.nextInt();
 
-        // Create bogies
-        GoodsBogie b1 = new GoodsBogie("Cylindrical");
-        GoodsBogie b2 = new GoodsBogie("Rectangular");
+        int[] capacities = new int[n];
 
-        // Safe assignment
-        b1.assignCargo("Petroleum");
+        System.out.println("Enter capacities:");
+        for (int i = 0; i < n; i++) {
+            capacities[i] = scanner.nextInt();
+        }
 
-        // Unsafe assignment (handled)
-        b2.assignCargo("Petroleum");
+        System.out.println("Before Sorting:");
+        display(capacities);
 
-        // Program continues
-        b2.assignCargo("Coal");
+        // Perform Bubble Sort
+        bubbleSort(capacities);
 
-        // Display final state
-        System.out.println("\nFinal Bogie States:");
-        System.out.println(b1.getDetails());
-        System.out.println(b2.getDetails());
+        System.out.println("After Sorting (Ascending):");
+        display(capacities);
+
+        scanner.close();
     }
 }
