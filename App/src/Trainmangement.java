@@ -1,69 +1,43 @@
-import java.util.*;
+import java.util.Scanner;
 
-// Custom Runtime Exception
-class CargoSafetyException extends RuntimeException {
-    public CargoSafetyException(String message) {
-        super(message);
-    }
-}
+public class TrainConsistManagementApp {
 
-// Goods Bogie class
-class GoodsBogie {
-    String type;
-    String cargo;
-
-    public GoodsBogie(String type) {
-        this.type = type;
-    }
-
-    public void assignCargo(String cargo) {
-        try {
-            // Safety rule
-            if (type.equals("Rectangular") && cargo.equals("Petroleum")) {
-                throw new CargoSafetyException(
-                        "Unsafe Assignment: Rectangular bogie cannot carry Petroleum!"
-                );
+    // Method to perform Linear Search
+    public static boolean linearSearch(String[] bogieIds, String searchKey) {
+        for (int i = 0; i < bogieIds.length; i++) {
+            // Compare using equals()
+            if (bogieIds[i].equals(searchKey)) {
+                return true; // Match found → early termination
             }
-
-            // Assign cargo if safe
-            this.cargo = cargo;
-            System.out.println("Cargo assigned successfully: " + cargo);
-
-        } catch (CargoSafetyException e) {
-            System.out.println("Error: " + e.getMessage());
-
-        } finally {
-            System.out.println("Assignment attempt completed.\n");
         }
+        return false; // No match found
     }
-
-    public String getDetails() {
-        return "Type: " + type + ", Cargo: " + cargo;
-    }
-}
-
-public class Trainmanagementapp {
 
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
 
-        System.out.println("=== Train Consist Management App ===");
+        System.out.print("Enter number of bogies: ");
+        int n = scanner.nextInt();
+        scanner.nextLine(); // consume newline
 
-        // Create bogies
-        GoodsBogie b1 = new GoodsBogie("Cylindrical");
-        GoodsBogie b2 = new GoodsBogie("Rectangular");
+        String[] bogieIds = new String[n];
 
-        // Safe assignment
-        b1.assignCargo("Petroleum");
+        System.out.println("Enter bogie IDs:");
+        for (int i = 0; i < n; i++) {
+            bogieIds[i] = scanner.nextLine();
+        }
 
-        // Unsafe assignment (handled)
-        b2.assignCargo("Petroleum");
+        System.out.print("Enter bogie ID to search: ");
+        String searchKey = scanner.nextLine();
 
-        // Program continues
-        b2.assignCargo("Coal");
+        boolean found = linearSearch(bogieIds, searchKey);
 
-        // Display final state
-        System.out.println("\nFinal Bogie States:");
-        System.out.println(b1.getDetails());
-        System.out.println(b2.getDetails());
+        if (found) {
+            System.out.println("Bogie ID found in the consist.");
+        } else {
+            System.out.println("Bogie ID not found.");
+        }
+
+        scanner.close();
     }
 }
